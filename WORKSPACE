@@ -34,7 +34,7 @@ go_dependencies()
 
 go_rules_dependencies()
 
-go_register_toolchains(version = "1.20.2")
+go_register_toolchains(version = "1.24.0")
 
 gazelle_dependencies(go_sdk = "go_sdk")
 
