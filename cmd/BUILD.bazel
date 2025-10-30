@@ -1,6 +1,5 @@
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 go_library(
     name = "cmd_lib",
@@ -41,20 +40,9 @@ go_library(
     ],
 )
 
-pkg_tar(
-    name = "cmd_layer",
-    srcs = [":cmd"],
-)
-
-oci_image(
-    name = "image",
-    base = "@distroless_base",
-    entrypoint = ["/cmd"],
-    tars = [":cmd_layer"],
-)
-
-oci_load(
-    name = "image_tarball",
-    image = ":image",
-    repo_tags = ["bazel-demo-app:latest"],
+go_image(
+    name = "cmd_image",
+    base = "@distroless_base//image",
+    embed = [":cmd_lib"],
+    visibility = ["//visibility:public"],
 )
